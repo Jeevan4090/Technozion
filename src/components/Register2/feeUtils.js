@@ -1,143 +1,98 @@
-export const normalizeStudentType = (value) => {
-  const normalized = String(value ?? "").trim().toLowerCase();
+// ─── Fee Constants ────────────────────────────────────────────────────────────
+export const GATE_FEE_PER_MEMBER = 100;
+export const COMPETITION_FEE_PER_EVENT = 500;
 
-  if (["nitw", "nitw-student"].includes(normalized)) return "nitw";
-  if (["external", "other", "non-nitw", "nonnitw", "other-institution"].includes(normalized)) return "external";
-
-  return normalized || "external";
-};
-
-export function isCompetitionEvent(event) {
-  if (!event) return false;
-  const type = String(event.eventType || event.type || event.category || "").toLowerCase();
-  return /competition/.test(type);
+// ─── Normalizers & Helpers ───────────────────────────────────────────────────
+export function normalizeStudentType(type) {
+  if (!type) return "external";
+  const normalized = String(type).trim().toLowerCase();
+  return normalized === "nitw" ? "nitw" : "external";
 }
 
-export function countExternalParticipants({ isNitwLead = false, members = [] } = {}) {
-  const validMembers = Array.isArray(members) ? members : [];
+export function countExternalParticipants({ isNitwLead = false, members = [], teamSize = 4 } = {}) {
   let count = isNitwLead ? 0 : 1;
-  validMembers.forEach((member) => {
-    if (!member || typeof member !== "object") return;
-    const normalizedType = normalizeStudentType(member.studentType);
-    if (normalizedType !== "nitw") count++;
-  });
-  return count;
+
+  const validMembers = members
+    .filter((m) => m && m.name && String(m.name).trim().length > 0)
+    .slice(0, Math.max(0, teamSize - 1));
+
+  for (const member of validMembers) {
+    if (normalizeStudentType(member.studentType) !== "nitw") {
+      count += 1;
+    }
+  }
+
+  return Math.min(count, teamSize);
 }
 
+// Alias for backwards-compatibility across the app
+export const getChargeableGateMembers = countExternalParticipants;
+
+// ─── Event Categorization ────────────────────────────────────────────────────
+export function groupRegistrationEvents(events = []) {
+  const competitions = [];
+  const games = [];
+  const other = [];
+
+  for (const ev of events) {
+    const type = String(ev.eventType || ev.category || "").toLowerCase();
+    if (type.includes("competition")) {
+      competitions.push(ev);
+    } else if (type.includes("game")) {
+      games.push(ev);
+    } else {
+      other.push(ev);
+    }
+  }
+
+  return [
+    { key: "competitions", label: "Competitions", events: competitions },
+    { key: "games", label: "Games & Activities", events: games },
+    { key: "other", label: "Demonstrations & Other Events", events: other },
+  ];
+}
+
+// ─── Fee Computation ─────────────────────────────────────────────────────────
 export function computeRegistrationFee({
   isNitwLead = false,
   members = [],
   selectedEventIds = [],
   events = [],
-} = {}) {
-  const GATE_FEE = 200;
-  const COMPETITION_FEE = 500;
-  const MAX_FEE = 2000;
-
-  const externalCount = countExternalParticipants({ isNitwLead, members });
-
-  if (externalCount === 0) {
-    return {
-      externalCount: 0,
-      total: 0,
-      mode: null,
-      competitionCount: 0,
-      requiresPayment: false,
-    };
-  }
-
-  const validEvents = Array.isArray(events) ? events : [];
-  const selectedIds = Array.isArray(selectedEventIds) ? selectedEventIds : [];
-
-  const comps = validEvents.filter(
-    (e) =>
-      selectedIds.includes(e._id || e.slug) &&
-      isCompetitionEvent(e)
-  ).length;
-
-  if (comps > 0) {
-    const total = Math.min(COMPETITION_FEE * comps, MAX_FEE);
-    return {
-      externalCount,
-      total,
-      mode: "competition",
-      competitionCount: comps,
-      requiresPayment: true,
-    };
-  }
-
-  if (selectedIds.length > 0) {
-    const total = Math.min(GATE_FEE * externalCount, MAX_FEE);
-    return {
-      externalCount,
-      total,
-      mode: "gate",
-      competitionCount: 0,
-      requiresPayment: true,
-    };
-  }
-
-  return {
-    externalCount,
-    total: 0,
-    mode: null,
-    competitionCount: 0,
-    requiresPayment: false,
-  };
-}
-
-export function getChargeableGateMembers({
-  isNitwLead = false,
-  members = [],
   teamSize = 4,
 } = {}) {
-  const chargeableParticipants = new Map();
+  const chosenEvents = (events || []).filter((e) =>
+    (selectedEventIds || []).includes(e._id || e.slug)
+  );
 
-  if (!isNitwLead) {
-    chargeableParticipants.set("lead", { name: "lead", studentType: "external" });
+  const competitionEvents = chosenEvents.filter((e) =>
+    String(e.eventType || e.category || "").toLowerCase().includes("competition")
+  );
+  const competitionCount = competitionEvents.length;
+
+  const externalCount = countExternalParticipants({
+    isNitwLead,
+    members,
+    teamSize,
+  });
+
+  if (competitionCount > 0) {
+    const total = Math.min(competitionCount * COMPETITION_FEE_PER_EVENT, 2000);
+    return {
+      total,
+      mode: "competition",
+      competitionCount,
+      externalCount,
+      requiresPayment: total > 0,
+    };
   }
 
-  const validMembers = Array.isArray(members) ? members : [];
-  validMembers.forEach((member) => {
-    if (!member || typeof member !== "object") return;
-
-    const name = typeof member.name === "string" ? member.name.trim() : "";
-    if (!name) return;
-
-    const normalizedType = normalizeStudentType(member.studentType);
-    if (normalizedType === "nitw") return;
-
-    const key = `${name.toLowerCase()}|${normalizedType}`;
-    if (!chargeableParticipants.has(key)) {
-      chargeableParticipants.set(key, { ...member, name, studentType: normalizedType });
-    }
-  });
-
-  const count = chargeableParticipants.size;
-  const safeTeamSize = Number.isFinite(teamSize) && teamSize > 0 ? teamSize : 0;
-  return Math.min(count, safeTeamSize || count);
-}
-
-export function groupRegistrationEvents(events = []) {
-  const groups = [
-    { key: "competitions", label: "Competitions", events: [] },
-    { key: "games", label: "Games", events: [] },
-    { key: "other", label: "Demonstrations & Other Events", events: [] },
-  ];
-
-  const normalized = Array.isArray(events) ? events : [];
-
-  normalized.forEach((event) => {
-    const type = (event?.eventType || event?.type || event?.category || "").toString().toLowerCase();
-
-    if (/competition/.test(type)) {
-      groups[0].events.push(event);
-    } else if (/game/.test(type)) {
-      groups[1].events.push(event);
-    } else {
-      groups[2].events.push(event);
-    }
-  });
-
-  return groups.filter((group) => group.events.length > 0);
+  // Gate fee: ₹100 per external participant (capped at ₹2000)
+  const total = Math.min(externalCount * GATE_FEE_PER_MEMBER, 2000);
+  return {
+    total,
+    mode: "gate",
+    competitionCount: 0,
+    externalCount,
+    requiresPayment: total > 0,
+  };
 }
