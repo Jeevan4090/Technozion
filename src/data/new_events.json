@@ -23,7 +23,7 @@
     "duration": "20 mins",
     "imgsrc": "/posters26/Smash-Karts.png",
     "poster": "/posters26/Smash-Karts.png",
-    "description": "A 2-tier robotics racing tournament: bring your own custom car to compete in a knockout bracket, or enter the learner track to debug microcontroller C++ code, wire sensors, and race with power-ups.",
+    "description": "A 2-tier robotics racing tournament: bring your own custom car to compete in a knockout bracket, or enter the learner track to debug microcontroller C++ code, wire sensors, and race with power-ups. Cash prize: ₹20,000.",
     "rules": "Bracket system for custom cars. Learner track features 3 rounds: Microcontroller code correction, Wiring sensors, and Track race with power-ups.",
     "poc": "Krishnanarayanan M (+91 98460 32569), Kallavi Sree Sathya Sivani (+91 7396292887)"
   },
@@ -37,7 +37,7 @@
     "duration": "10-20 mins pitch",
     "imgsrc": "/posters26/impact_tank.jpg",
     "poster": "/posters26/impact_tank.jpg",
-    "description": "Structured student startup challenge taking participants from problem identification through prototype building and market validation, culminating in an offline finale at NIT Warangal with a 30K prize pool.",
+    "description": "Structured student startup challenge taking participants from problem identification through prototype building and market validation, culminating in an offline finale at NIT Warangal . Cash prize: ₹25,000.",
     "rules": "Shortlisted teams demonstrate interactive prototypes at the Impact Expo, followed by a final pitch presentation and Q&A session before an expert jury panel.",
     "poc": "Dhrithi (6303078358), Sanjana (8885354347)"
   },
@@ -93,7 +93,7 @@
     "duration": "45-60 mins",
     "imgsrc": "/posters26/rube_wars.png",
     "poster": "/posters26/rube_wars.png",
-    "description": "Team engineering challenge to design and construct a continuous chain-reaction machine accomplishing a set target using 6 to 9 mechanisms from a catalogue of 15 mechanisms.",
+    "description": "Team engineering challenge to design and construct a continuous chain-reaction machine accomplishing a set target using 6 to 9 mechanisms from a catalogue of 15 mechanisms. Cash prize: ₹5,000.",
     "rules": "Single round, 45-60 min build and test window. Machine must trigger from a single start point and proceed without manual intervention. Evaluated out of 100 marks.",
     "poc": "Surya Kashyap (8143602826), Himavi N (8712803898)"
   },
@@ -121,7 +121,7 @@
     "duration": "3 Hours",
     "imgsrc": "/posters26/edge_olympics_eces.png",
     "poster": "/posters26/edge_olympics_eces.png",
-    "description": "EdgeAI-based constrained hardware challenge where participants deploy and optimize deep learning algorithms within tight compute, power, and memory limits on physical embedded boards.",
+    "description": "EdgeAI-based constrained hardware challenge where participants deploy and optimize deep learning algorithms within tight compute, power, and memory limits on physical embedded boards. Cash prize: ₹10,000.",
     "rules": "Problem statements distributed at event start. Teams evaluated on accuracy, execution latency, model footprint, and resource optimization.",
     "poc": "Ashish (7660899844)"
   },
@@ -177,7 +177,7 @@
     "duration": "3-4 hours",
     "imgsrc": "/posters26/DEFCON.jpg",
     "poster": "/posters26/DEFCON.jpg",
-    "description": "Live attack-and-defense cybersecurity hackathon where teams fortify their own machines against exploits while scanning, breaking into, and escalating privileges across rival systems.",
+    "description": "Live attack-and-defense cybersecurity hackathon where teams fortify their own machines against exploits while scanning, breaking into, and escalating privileges across rival systems. Cash prize: ₹10,000.",
     "rules": "Round 1 (Fortify) allows patching and configuration only. Round 2 (Attack) opens the arena network for live exploitation. DoS attacks strictly prohibited. Automated scoring tracks foothold and full takeover milestones.",
     "poc": "Aaditya Shukla (9119720950)"
   },
@@ -233,7 +233,7 @@
     "duration": "15-20 mins pitch",
     "imgsrc": "/posters26/venture_vortex.jpg",
     "poster": "/posters26/venture_vortex.jpg",
-    "description": "An All-India Entrepreneurship Competition: teardown a top Indian startup, formulate a go-to-market/MVP execution plan, and pitch live to a boardroom panel at NIT Warangal.",
+    "description": "An All-India Entrepreneurship Competition: teardown a top Indian startup, formulate a go-to-market/MVP execution plan, and pitch live to a boardroom panel at NIT Warangal. Cash prize: ₹0.",
     "rules": "Round 1 (Startup teardown) and Round 2 (Strategy/MVP challenge) conducted online. Finalists present 5-10 min strategy deck with 15 mins Q&A before judges.",
     "poc": "Archit (9005269875), Sai Vardhan (9392141239)"
   },
@@ -261,7 +261,7 @@
     "duration": "40 mins",
     "imgsrc": "/posters26/MECHATRONICS-GALA.png",
     "poster": "/posters26/MECHATRONICS-GALA.png",
-    "description": "Flagship multi-event showcase bringing together autonomous F1TENTH racing (Turing Track), human-vs-AI robotic arm gameplay (AI Gambit), and obstacle drone piloting (Mach Sprint).",
+    "description": "Flagship multi-event showcase bringing together autonomous F1TENTH racing (Turing Track), human-vs-AI robotic arm gameplay (AI Gambit), and obstacle drone piloting (Mach Sprint). Cash prize: ₹25,000.",
     "rules": "Turing Track vehicles must run all compute onboard. Mach Sprint drones piloted via Wi-Fi smartphone app. AI Gambit features continuously monitored safety E-stops.",
     "poc": "Akhil Hasan (8714066807), Rayyan (+91 76748 80306), Saqib (+91 75695 67293)"
   },
@@ -275,7 +275,7 @@
     "duration": "30-45 mins",
     "imgsrc": "/posters26/Chem-E-Car-Showdown.jpg",
     "poster": "/posters26/Chem-E-Car-Showdown.jpg",
-    "description": "Build a small vehicle powered and stopped entirely by chemical reactions—no batteries, motors, mechanical brakes, or electronic timers permitted.",
+    "description": "Build a small vehicle powered and stopped entirely by chemical reactions—no batteries, motors, mechanical brakes, or electronic timers permitted. Cash prize: ₹10,000.",
     "rules": "Vehicle fits within 40x30x20 cm. Target distance and payload revealed 1 hour before run. Closest stop to line wins; no manual intervention after release.",
     "poc": "Parthu Tavva (9490782021)"
   },
@@ -289,7 +289,7 @@
     "duration": "1.5 Hours",
     "imgsrc": "/posters26/robo_cannonade.png",
     "poster": "/posters26/robo_cannonade.png",
-    "description": "Robotics competition where teams build and operate a motorized pan-tilt launcher to accurately hit targets across an arena using a single-shot table tennis ball mechanism.",
+    "description": "Robotics competition where teams build and operate a motorized pan-tilt launcher to accurately hit targets across an arena using a single-shot table tennis ball mechanism. Cash prize: ₹25,000.",
     "rules": "Stationary robot with min 3 DOF fitting in 50x50x50 cm starting volume. Wireless control or auto-aiming computer vision bonus. External participants bring custom builds; internal NITW teams use identical kits.",
     "poc": "Subodh Kanbale (9325809271), Jaykumar Bhairi (9209518516)"
   },
@@ -359,7 +359,7 @@
     "duration": "30 mins",
     "imgsrc": "/posters26/MetaArmour.jpeg",
     "poster": "/posters26/MetaArmour.jpeg",
-    "description": "Thermal-protection-system design challenge. Teams act as materials engineers to fabricate a lightweight thermal shield for a small re-entry capsule tested under direct flame exposure.",
+    "description": "Thermal-protection-system design challenge. Teams act as materials engineers to fabricate a lightweight thermal shield for a small re-entry capsule tested under direct flame exposure. Cash prize: ₹4,500.",
     "rules": "10 min design & virtual budgeting, 20 min physical construction, standardized heat test rig, followed by failure analysis and redesign.",
     "poc": "Sathwika (82473 82929)"
   },
@@ -373,7 +373,7 @@
     "duration": "5-10 mins per game",
     "imgsrc": "/posters26/Arcade_Robostrike.png",
     "poster": "/posters26/Arcade_Robostrike.png",
-    "description": "Interactive robotics and embedded-systems challenge where teams develop algorithms for AI Air Hockey puck-tracking or Robot Strike multi-target robotic arm tracking.",
+    "description": "Interactive robotics and embedded-systems challenge where teams develop algorithms for AI Air Hockey puck-tracking or Robot Strike multi-target robotic arm tracking. Cash prize: ₹7,000.",
     "rules": "Write and validate control logic in MATLAB simulation before testing on Raspberry Pi/ESP32 real-time hardware. Evaluated on accuracy, response speed, and stability.",
     "poc": "Vipul (8118832272), Sai Datta (9346647634), Garima (9680686877)"
   },
@@ -415,7 +415,7 @@
     "duration": "1-2 Hours",
     "imgsrc": "/posters26/bid_to_build.jpeg",
     "poster": "/posters26/bid_to_build.jpeg",
-    "description": "Civil engineering challenge testing strategic resource allocation and construction execution. Bid on materials within a virtual budget and construct a load-bearing prototype.",
+    "description": "Civil engineering challenge testing strategic resource allocation and construction execution. Bid on materials within a virtual budget and construct a load-bearing prototype. Cash prize: ₹7,000.",
     "rules": "Round 1: Virtual budget material bidding. Round 2: Timed model construction using only acquired inventory. Models evaluated on strength-to-weight ratio and load capacity.",
     "poc": "CES Coordinator (9876543210)"
   },
@@ -443,7 +443,7 @@
     "duration": "20 mins",
     "imgsrc": "/posters26/JAHAZ.jpg",
     "poster": "/posters26/JAHAZ.jpg",
-    "description": "Flagship nautical event at the central fountain in front of the Main Building. Custom RC boats (ESP32, 380 DC motor, 30A ESC, MG90S servo rudder, 2S LiPo) tackle a speed sprint, an obstacle slalom, and a head-to-head elimination final through active fountain sprays.",
+    "description": "Flagship nautical event at the central fountain in front of the Main Building. Custom RC boats (ESP32, 380 DC motor, 30A ESC, MG90S servo rudder, 2S LiPo) tackle a speed sprint, an obstacle slalom, and a head-to-head elimination final through active fountain sprays. Cash prize: ₹15,000.",
     "rules": "3 participants and 1 RC boat per team. Navigate the water maze through checkpoints, solve puzzles and dynamic QR challenges, collect electronic components, complete the final circuit and decode the Morse-code message. Highest total valid score wins. No interference, external assistance, QR sharing/tampering or unauthorised shortcuts. Follow marshal instructions; only approved equipment allowed.",
     "poc": "Gowri (6238770785)"
   },
@@ -457,7 +457,7 @@
     "duration": "5 hrs workshop + 2 hrs competition",
     "imgsrc": "/posters26/Hover-Craft.jpg",
     "poster": "/posters26/Hover-Craft.jpg",
-    "description": "Workshop and competition in one: teams learn hovercraft mechanics, build a working model from a standard kit, then race it through challenge tracks. Teaches air lift, thrust, reduced friction, and steering control.",
+    "description": "Workshop and competition in one: teams learn hovercraft mechanics, build a working model from a standard kit, then race it through challenge tracks. Teaches air lift, thrust, reduced friction, and steering control. Cash prize: ₹10,000.",
     "rules": "Engineering or technically skilled college students; each participant joins only one team; register with a team name. Phase 1: hands-on workshop (Oct 25) to build the kit hovercraft. Phase 2 (Oct 31): kit build check (~2 hrs) and testing with mandatory safety check; no parts outside the official kit. Phase 3: Race, Obstacle Course, Water Race, Precision Landing. Phase 4: scores from all 4 tracks plus judges' design and presentation scores; highest total is Hovercraft Champion.",
     "poc": "Sushanth and Adhithya"
   },
@@ -485,7 +485,7 @@
     "duration": "Half a day",
     "imgsrc": "/posters26/naturaldisaster.jpeg",
     "poster": "/posters26/naturaldisaster.jpeg",
-    "description": "National-level engineering design challenge: teams work on a problem for a month, then present and demonstrate at the fest. Five problem statements (teams may enter any two): PS-01 Flood Vault, PS-02 Ground Zero (earthquake FEM), PS-03 Survivor Seeker (search-and-rescue rover), PS-04 EvacSim (cyclone evacuation planning tool), PS-05 Student Innovation Challenge. Prizes: ₹7,000 for 1st and ₹3,500 for 2nd.",
+    "description": "National-level engineering design challenge: teams work on a problem for a month, then present and demonstrate at the fest. Five problem statements (teams may enter any two): PS-01 Flood Vault, PS-02 Ground Zero (earthquake FEM), PS-03 Survivor Seeker (search-and-rescue rover), PS-04 EvacSim (cyclone evacuation planning tool), PS-05 Student Innovation Challenge. Prizes: ₹7,000 for 1st and ₹3,500 for 2nd. Cash prize: ₹10,000.",
     "rules": "Up to two problem statements per team, each judged independently. Per challenge: Design Report (max 5 pages), Engineering Development Log (Excel), and CAD files with assembly drawing (PS-04: source code and simulation model). 3-minute technical presentation before testing. Single live round: PS-01 is a 10-minute submersion test, PS-03 a timed obstacle course, PS-02/04/05 judged on analysis and presentation.",
     "poc": "Royce Fran (95811 82664)"
   },

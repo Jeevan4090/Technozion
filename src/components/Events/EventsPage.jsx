@@ -1,5 +1,5 @@
-import React, { useState, useMemo, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useMemo, useRef } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import Poster from "../event_scroll/poster";
 import useEvents from "./useEvents";
 import EventsLoading from "./EventsLoading";
@@ -19,8 +19,13 @@ const CATEGORY_TABS = [
 export const EventsPage = () => {
   const navigate = useNavigate();
   const catalogue = useRef(null);
-  const [selectedCategory, setSelectedCategory] = useState("all");
+  
+  // 1. Read and write the category to the URL instead of local state
+  const [searchParams, setSearchParams] = useSearchParams();
+  const selectedCategory = searchParams.get("tab") || "all";
+
   const { events, isLoading } = useEvents();
+  
   const filteredEvents = useMemo(() => events.filter((ev) => {
     if (selectedCategory === "all") return true;
     const typeLower = (ev.eventType || "").toLowerCase();
@@ -62,10 +67,15 @@ export const EventsPage = () => {
         ...item,
         imgsrc: item.imgsrc || "",
         glink: item.glink || "",
-        returnPath: "/events",
+        // Pass the current tab back to the Card component so we can use it to return smoothly
+        returnPath: `/events?tab=${selectedCategory}`,
       },
     });
   };
+
+  // Find the label for the dynamic heading (e.g., "COMPETITIONS", "GAMES")
+  const currentTabLabel = CATEGORY_TABS.find(tab => tab.key === selectedCategory)?.label || "ALL EVENTS";
+  const displayHeading = selectedCategory === "all" ? "ALL EVENTS" : currentTabLabel;
   
  return (
     <div className="past-events-root festival-events" aria-busy={isLoading}>
@@ -89,7 +99,8 @@ export const EventsPage = () => {
                   className={`tab-button ${
                     selectedCategory === tab.key ? "active" : ""
                   }`}
-                  onClick={() => setSelectedCategory(tab.key)}
+                  // 2. Update the URL parameters when a tab is clicked
+                  onClick={() => setSearchParams({ tab: tab.key })}
                   aria-pressed={selectedCategory === tab.key}
                 >
                   {tab.label}
@@ -99,10 +110,13 @@ export const EventsPage = () => {
           </div>
         </div>
 
-
         {/* Complete, directly accessible event catalogue. */}
         <div className="edition-content-body" id="event-catalogue" ref={catalogue} tabIndex={-1}>
-          <div className="catalogue-heading"><p className="scene-eyebrow">FIND YOUR NEXT CHALLENGE</p><h2>ALL EVENTS<span>.</span></h2></div>
+          <div className="catalogue-heading">
+            <p className="scene-eyebrow">FIND YOUR NEXT CHALLENGE</p>
+            {/* 3. Dynamic heading based on the selected tab */}
+            <h2>{displayHeading}<span>.</span></h2>
+          </div>
           <div className="events-grid">
             {filteredEvents.map((item, index) => (
               <div className="catalogue-item" key={item._id || item.slug || index}><Poster

@@ -11,7 +11,7 @@ import {
   normalizeStudentType,
 } from "./feeUtils";
 
-const CONTACT_EMAIL = "technozion@nitw.ac.in";
+const CONTACT_EMAIL = "sec_technical@nitw.ac.in";
 
 const inputCls =
   "ui-input w-full px-4 py-2.5 rounded-lg bg-ui-input border border-ui-border text-white placeholder-neutral-500 outline-none focus:outline-none focus:border-ui-accent transition-all duration-200";

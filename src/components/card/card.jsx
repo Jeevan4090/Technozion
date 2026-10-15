@@ -179,9 +179,17 @@ const Card = () => {
                   <span className="section-label opacity-70 text-[0.95rem] tracking-wider uppercase">
                     Prizes
                   </span>
-                  <span className="text-xl lg:text-2xl font-bold text-cyan-300">
-                    Exciting prizes are available!
-                  </span>
+                  <div className="flex flex-col">
+                    <span className="text-xl lg:text-2xl font-bold text-cyan-300">
+                      {cashPrize ? `₹${cashPrize}` : "Exciting prizes are available!"}
+                    </span>
+                    {/* Added Disclaimer Here */}
+                    {cashPrize && (
+                      <small className="opacity-60 text-xs mt-1">
+                        *Cashprizes may vary according to the judging criteria
+                      </small>
+                    )}
+                  </div>
                 </section>
               )}
 
@@ -246,11 +254,6 @@ const Card = () => {
                       </div>
                     ))}
                   </div>
-                  {hasPrizes && (
-                    <small className="opacity-60 text-xs mt-2 block">
-                      *Prizes will be awarded based on judging criteria
-                    </small>
-                  )}
                 </section>
               )}
             </div>

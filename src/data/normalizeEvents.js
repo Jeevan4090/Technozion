@@ -48,12 +48,13 @@ function parseRules(raw) {
 
 function normalizeEvent(raw, index = 0) {
   const name = clean(raw["Event Name"] || raw.name || raw.title);
-  const description = (
+  let description = (
     raw["Event Description mention clearly and elaborately"] ||
     raw.description ||
     (raw.overview && raw.overview.description) ||
     ""
   ).toString().trim();
+  
   const teamRaw = clean(
     raw["Team size (write 1 if individual participation)"] ||
     raw.teamSize ||
@@ -69,6 +70,13 @@ function normalizeEvent(raw, index = 0) {
   else if (/demonstration/i.test(rawType)) eventType = "Demonstration";
 
   const posterPath = raw.poster || raw.imgsrc || raw.image || "";
+
+  // Extract "Cash prize: ₹25,000" from the description
+  const prizeMatch = description.match(/Cash prize:\s*₹?([\d,]+)/i);
+  const extractedPrize = prizeMatch ? prizeMatch[1] : "";
+  
+  // Remove the cash prize text from the description so it doesn't display twice in the UI
+  description = description.replace(/\s*Cash prize:\s*₹?[\d,]+\.?/i, "").trim();
 
   return {
     id: raw._id || raw.id || "",
@@ -94,12 +102,12 @@ function normalizeEvent(raw, index = 0) {
     hasPrizes: Boolean(
       raw.hasPrizes ||
       raw.cashPrize ||
+      extractedPrize ||
       eventType.toLowerCase() === "competition" ||
       /prize/i.test(description)
-      
     ),
     totalCost: raw.totalCost !== undefined ? raw.totalCost : null,
-    cashPrize: raw.cashPrize || raw.cash_prize || "",
+    cashPrize: raw.cashPrize || raw.cash_prize || extractedPrize || "",
     judgingCriteria: raw.judgingCriteria || (raw.overview && raw.overview.judging_criteria) || "Coming Soon...",
     imgsrc: posterPath,
     poster: posterPath,
