@@ -24,10 +24,13 @@ function parseContacts(raw, email) {
     const m = seg.match(PHONE_RE);
     if (m) {
       contacts.push({ name: stripName(seg), phone: m[1].replace(/[\s-]/g, "") });
-    } else if (segments[i + 1] && PHONE_RE.test(segments[i + 1]) && !stripName(segments[i + 1])) {
+        } else if (segments[i + 1] && PHONE_RE.test(segments[i + 1]) && !stripName(segments[i + 1])) {
       const phone = segments[i + 1].match(PHONE_RE)[1].replace(/[\s-]/g, "");
       contacts.push({ name: clean(seg.replace(/[-:,]/g, " ")), phone });
       i++;
+    } else {
+      const n = stripName(seg);
+      if (n) contacts.push({ name: n });
     }
   }
   if (emailClean && contacts.length > 0) {
@@ -98,7 +101,7 @@ function normalizeEvent(raw, index = 0) {
       raw["Rules of the Event, include how many rounds, any procedure to follow, etc."] ||
       raw.rules
     ),
-    contact: parseContacts(raw["POC for doubts - name and phone number"] || raw.contact, email),
+    contact: parseContacts(raw["POC for doubts - name and phone number"] || raw.contact || raw.poc, email),
     hasPrizes: Boolean(
       raw.hasPrizes ||
       raw.cashPrize ||
