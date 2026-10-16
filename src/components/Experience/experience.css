@@ -47,6 +47,11 @@
   font-size: .8rem;
 }
 
+.scene-skip:not(:focus) {
+  opacity: 0;
+  pointer-events: none;
+}
+
 .scene-skip:focus {
   transform: none;
 }
