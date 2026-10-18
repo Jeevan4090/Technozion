@@ -87,9 +87,7 @@ export function computeRegistrationFee({
   }
 
   if (competitionCount > 0) {
-  const total = externalCount === 0
-    ? 0
-    : Math.min(competitionCount * COMPETITION_FEE_PER_EVENT, 2000);
+    const total = Math.min(competitionCount * COMPETITION_FEE_PER_EVENT, 2000);
     return {
       total,
       mode: "competition",
