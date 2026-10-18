@@ -34,3 +34,17 @@ test-results/
 .gemini/
 .vercel
 .env*
+
+# Claude Code / claude-flow (ruflo) agent state
+.claude/
+.claude-flow/
+**/.claude-flow/
+.swarm/
+.hive-mind/
+.mcp.json
+CLAUDE.md
+CLAUDE.local.md
+claude-flow.config.json
+.roomodes
+memory/
+coordination/
