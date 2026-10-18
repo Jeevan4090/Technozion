@@ -1,4 +1,4 @@
-import { getChargeableGateMembers, groupRegistrationEvents } from './feeUtils';
+import { computeRegistrationFee, getChargeableGateMembers, groupRegistrationEvents } from './feeUtils';
 
 describe('getChargeableGateMembers', () => {
   it('charges only non-NITW team members in a full four-person team', () => {
@@ -174,5 +174,63 @@ describe('groupRegistrationEvents', () => {
     expect(groups[0].events.map((event) => event.name)).toEqual(['Hackathon']);
     expect(groups[1].events.map((event) => event.name)).toEqual(['Quiz']);
     expect(groups[2].events.map((event) => event.name)).toEqual(['Drone Demo']);
+  });
+});
+
+describe('computeRegistrationFee', () => {
+  const events = [
+    { _id: 'c1', eventType: 'Competition' },
+    { _id: 'c2', eventType: 'Competition' },
+    { _id: 'c3', eventType: 'Competition' },
+    { _id: 'c4', eventType: 'Competition' },
+    { _id: 'c5', eventType: 'Competition' },
+    { _id: 'g1', eventType: 'Game' },
+    { _id: 'd1', eventType: 'Demonstration' },
+  ];
+  const nitw = (name) => ({ name, studentType: 'nitw' });
+  const external = (name) => ({ name, studentType: 'external' });
+  const fee = (input) => computeRegistrationFee({ events, ...input });
+
+  it.each([1, 2, 3, 4])('charges nothing to an all-NITW team of %i in competitions', (teamSize) => {
+    const members = ['A', 'B', 'C'].slice(0, teamSize - 1).map(nitw);
+    expect(fee({ isNitwLead: true, members, teamSize, selectedEventIds: ['c1', 'c2'] }))
+      .toMatchObject({ total: 0, requiresPayment: false, externalCount: 0 });
+  });
+
+  it.each([
+    ['competitions plus games', ['c1', 'c2', 'c3', 'c4', 'c5', 'g1']],
+    ['only games and demos', ['g1', 'd1']],
+    ['no events', []],
+  ])('charges nothing to an all-NITW team picking %s', (_label, selectedEventIds) => {
+    expect(fee({ isNitwLead: true, members: ['A', 'B', 'C'].map(nitw), teamSize: 4, selectedEventIds }))
+      .toMatchObject({ total: 0, requiresPayment: false });
+  });
+
+  it('ignores blank slots beyond the team size for an NITW team', () => {
+    expect(fee({
+      isNitwLead: true,
+      members: [nitw('A'), external('Ghost'), external('Ghost 2')],
+      teamSize: 2,
+      selectedEventIds: ['c1'],
+    })).toMatchObject({ total: 0, requiresPayment: false });
+  });
+
+  it('charges the competition fee when an NITW team has one external member', () => {
+    expect(fee({ isNitwLead: true, members: [nitw('A'), external('B')], teamSize: 3, selectedEventIds: ['c1'] }))
+      .toMatchObject({ total: 500, mode: 'competition', requiresPayment: true });
+  });
+
+  it('charges an external lead even when every teammate is from NITW', () => {
+    expect(fee({ isNitwLead: false, members: [nitw('A'), nitw('B')], teamSize: 3, selectedEventIds: ['g1'] }))
+      .toMatchObject({ total: 100, mode: 'gate', externalCount: 1, requiresPayment: true });
+  });
+
+  it('charges an external solo lead the competition or gate fee', () => {
+    expect(fee({ isNitwLead: false, teamSize: 1, selectedEventIds: ['c1'] })).toMatchObject({ total: 500, requiresPayment: true });
+    expect(fee({ isNitwLead: false, teamSize: 1, selectedEventIds: ['g1'] })).toMatchObject({ total: 100, requiresPayment: true });
+  });
+
+  it('caps the competition fee at ₹2000', () => {
+    expect(fee({ isNitwLead: false, teamSize: 1, selectedEventIds: ['c1', 'c2', 'c3', 'c4', 'c5'] }).total).toBe(2000);
   });
 });

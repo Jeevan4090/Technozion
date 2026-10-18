@@ -125,9 +125,9 @@ export default function Register() {
     ...(selectedTeamSize > 1 ? [{ id: 1, label: "Your team" }] : []),
     { id: 2, label: "Your events" },
     { id: 3, label: "Identity proof" },
-    { id: 4, label: "Payment" },
+    ...(requiresPayment ? [{ id: 4, label: "Payment" }] : []),
     { id: 5, label: "Review & submit" },
-  ], [selectedTeamSize]);
+  ], [selectedTeamSize, requiresPayment]);
 
   const currentIndex = steps.findIndex(item => item.id === step);
   const current = steps[currentIndex] || steps[0];
@@ -232,7 +232,7 @@ export default function Register() {
       ? 2
       : invalid.collegeId
       ? 3
-      : invalid.paymentScreenshot
+      : invalid.paymentScreenshot && requiresPayment
       ? 4
       : 5;
     setStep(target);
@@ -330,7 +330,7 @@ export default function Register() {
                     })}
                   />
                   <p className="text-xs text-ui-muted mt-2">
-                    {isNitw ? "NITW student · gate fee exempt for NITW members." : "NITW students: use your institute email."}
+                    {isNitw ? "NITW student · teams made up only of NITW students pay nothing." : "NITW students: use your institute email."}
                   </p>
                   {errors.email && <p className="text-red-400 text-xs mt-1.5">{errors.email.message}</p>}
                 </div>
@@ -539,7 +539,8 @@ export default function Register() {
             </section>
 
             {/* Step 4: Payment */}
-            <section hidden={step !== 4 || total <= 0} className="registration-step space-y-6">
+            {requiresPayment && (
+            <section hidden={step !== 4} className="registration-step space-y-6">
               <div className="space-y-2">
                 <p className="text-sm text-ui-muted">Transfer your registration fee to the account below, then attach the payment screenshot.</p>
               </div>
@@ -635,6 +636,7 @@ export default function Register() {
                 )}
               </div>
             </section>
+            )}
 
             {/* Step 5: Review & submit */}
             <section hidden={step !== 5} className="registration-step registration-review">

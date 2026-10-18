@@ -75,6 +75,17 @@ export function computeRegistrationFee({
     teamSize,
   });
 
+  // Teams made up only of NITW students pay nothing, whatever the team size or events
+  if (externalCount === 0) {
+    return {
+      total: 0,
+      mode: "exempt",
+      competitionCount,
+      externalCount: 0,
+      requiresPayment: false,
+    };
+  }
+
   if (competitionCount > 0) {
     const total = Math.min(competitionCount * COMPETITION_FEE_PER_EVENT, 2000);
     return {
