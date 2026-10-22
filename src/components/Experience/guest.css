@@ -1,0 +1,156 @@
+/* Guest of honour scene; matches the midnight-blue festival chapters. */
+
+.festival-guest {
+  position: relative;
+  padding: 100px 5vw 120px;
+  background: radial-gradient(ellipse at 15% 40%, #231735, transparent 55%), #0f1726;
+  color: #b6bbce;
+  border-block: 1px solid #293048;
+  overflow: clip;
+}
+
+.guest-outline {
+  position: absolute;
+  top: 20px;
+  left: -4%;
+  font-family: var(--font-heading);
+  font-size: 13vw;
+  line-height: 1;
+  white-space: nowrap;
+  color: transparent;
+  -webkit-text-stroke: 1px #8d6ab626;
+  pointer-events: none;
+}
+
+.guest-inner {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: minmax(220px, 300px) 1fr;
+  gap: clamp(40px, 6vw, 96px);
+  align-items: center;
+  max-width: 1400px;
+  margin: auto;
+}
+
+.guest-portrait {
+  position: relative;
+  justify-self: center;
+  width: 200px;
+  margin: 0;
+}
+
+.guest-portrait-frame {
+  position: absolute;
+  inset: -18px -18px 22px 18px;
+  border: 1px solid #80639f;
+  background: linear-gradient(135deg, #2a1c3d, transparent 70%);
+  box-shadow: 0 0 60px rgb(128 99 159 / 25%);
+}
+
+.guest-portrait-photo {
+  position: relative;
+  display: block;
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border: 6px solid #3a3855;
+  box-shadow: 0 24px 40px rgb(0 0 0 / 35%);
+}
+
+.guest-portrait figcaption {
+  position: relative;
+  margin-top: 18px;
+  font-size: .63rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: #8797af;
+}
+
+.guest-content .scene-eyebrow {
+  color: #8797af;
+  margin-bottom: 28px;
+}
+
+.guest-name {
+  margin: 0;
+  font-size: clamp(3rem, 7vw, 7rem);
+  font-weight: 700;
+  line-height: .95;
+  letter-spacing: -.05em;
+  color: #b2a0cf;
+}
+
+.guest-tagline {
+  margin: 20px 0 0;
+  font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+  font-weight: 500;
+  color: #9782bb;
+}
+
+.guest-bio {
+  margin: 32px 0 0;
+  max-width: 800px;
+  font-size: clamp(1.05rem, 1.6vw, 1.4rem);
+  line-height: 1.65;
+  color: #b6bbce;
+}
+
+.guest-highlights {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 36px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.guest-highlights li {
+  padding: 10px 14px;
+  border: 1px solid #394159;
+  background: #1b2034;
+  font-size: .68rem;
+  font-weight: 500;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #b7a2d0;
+}
+
+.festival-guest .scene-link {
+  color: #b5a1d4;
+  border-color: #715a82;
+}
+
+@media (max-width: 767px) {
+  .festival-guest {
+    padding: 64px 20px;
+  }
+  .guest-outline {
+    font-size: 22vw;
+    top: 12px;
+  }
+  .guest-inner {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+  .guest-portrait {
+    justify-self: start;
+    margin-left: 18px;
+  }
+  .guest-name {
+    font-size: clamp(2.6rem, 12vw, 4rem);
+  }
+  .guest-bio {
+    font-size: 1.05rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .guest-portrait-frame,
+  .guest-portrait-photo,
+  .guest-highlights li {
+    transform: none !important;
+    clip-path: none !important;
+    opacity: 1 !important;
+  }
+}

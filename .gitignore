@@ -1,0 +1,50 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+/.vercel
+.pnp.js
+
+# testing
+/coverage
+
+# production
+/build
+
+# misc
+.DS_Store
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# playwright & testing logs
+.playwright-mcp/
+playwright-report/
+test-results/
+
+# gemini & agent configs/rules
+.agents/
+.gemini/
+.vercel
+.env*
+
+# Claude Code / claude-flow (ruflo) agent state
+.claude/
+.claude-flow/
+**/.claude-flow/
+.swarm/
+.hive-mind/
+.mcp.json
+CLAUDE.md
+CLAUDE.local.md
+claude-flow.config.json
+.roomodes
+memory/
+coordination/

@@ -1,0 +1,142 @@
+/* Event detail layout stays scoped to its own page. */
+
+.card-container {
+  min-height: 100svh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: calc(var(--header-height) + 32px) 24px 40px;
+  position: relative;
+}
+
+.event_card.wrap {
+  width: 100%;
+  max-width: var(--page-width);
+  height: max(560px, calc(100svh - var(--header-height) - 72px));
+  max-height: 840px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-panel);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-panel);
+  overflow: hidden;
+}
+
+.event_card .text {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.event_card .cardnav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 16px 24px;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.event_card .back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  padding: 10px 16px;
+  border: 1px solid var(--color-accent);
+  border-radius: 8px;
+  background: var(--color-accent);
+  color: #092126;
+  font-size: .875rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.event_card .back-button:hover {
+  background: #90e9e6;
+}
+
+.event_card .card-sections-container {
+  display: grid;
+  grid-template-columns: 28% 40% 32%;
+  flex: 1;
+  min-height: 0;
+}
+
+.event_card .card-section {
+  min-width: 0;
+  min-height: 0;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.event_card .card-section-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid var(--color-border);
+}
+
+.event_card .poster-frame {
+  width: 100%;
+  max-width: 310px;
+}
+
+.event_card .poster-frame img {
+  max-width: 100%;
+  max-height: 62vh;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.event_card .card-section-overview {
+  border-right: 1px solid var(--color-border);
+}
+
+.event_card .rule-item, .event_card .contact-card {
+  border-color: var(--color-border);
+  background: var(--color-input);
+}
+
+@media(max-width: 1023px) {
+  .event_card.wrap {
+    height: auto;
+    max-height: none;
+  }
+  .event_card .card-sections-container {
+    grid-template-columns: 35% 65%;
+  }
+  .event_card .card-section {
+    overflow: visible;
+  }
+  .event_card .card-section-overview {
+    border-right: 0;
+  }
+  .event_card .card-section-rules {
+    grid-column: 1 / -1;
+    border-top: 1px solid var(--color-border);
+  }
+}
+
+@media(max-width: 767px) {
+  .card-container {
+    padding: calc(var(--header-height) + 24px) 16px 32px;
+  }
+  .event_card .card-sections-container {
+    display: flex;
+    flex-direction: column;
+  }
+  .event_card .card-section {
+    padding: 20px;
+  }
+  .event_card .card-section-image {
+    border-right: 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .event_card .poster-frame {
+    max-width: 240px;
+  }
+}

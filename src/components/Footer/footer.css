@@ -1,0 +1,22 @@
+.footer {
+  position: relative;
+  width: 100%;
+  padding: 28px 16px;
+  border-top: 1px solid var(--color-border);
+  text-align: center;
+  color: var(--color-muted);
+  font-size: .875rem;
+}
+
+.footer p + p {
+  margin-top: 8px;
+  font-size: .75rem;
+}
+
+.footer a {
+  color: var(--color-text);
+}
+
+.footer a:hover {
+  color: var(--color-accent);
+}

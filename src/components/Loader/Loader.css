@@ -1,0 +1,33 @@
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg);
+  transition: opacity 250ms ease;
+}
+
+.loader.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.loading-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 16px;
+  padding: 32px;
+  color: var(--color-muted);
+  font-family: var(--font-body);
+  font-size: .875rem;
+}
+
+.loading-state img {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+}

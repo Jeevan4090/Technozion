@@ -1,0 +1,62 @@
+.Teams {
+  position: relative;
+  min-height: 100vh;
+  padding: calc(var(--header-height) + 40px) 24px 64px;
+}
+
+.Teams .mainteams {
+  display: block;
+  height: 80px;
+  max-width: 100%;
+  object-fit: contain;
+  margin: 0 auto 40px;
+}
+
+.team-list {
+  position: relative;
+  width: 100%;
+  max-width: var(--page-width);
+  margin: 0 auto;
+}
+
+.team-list section > h1, .team-list section > h2 {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.team-list section > h1 {
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+}
+
+.team-list section > h2 {
+  font-size: clamp(1.25rem, 2vw, 1.75rem);
+}
+
+.team-card {
+  width: 100%;
+  max-width: 320px;
+  padding: 12px;
+}
+
+.team-card p {
+  overflow-wrap: anywhere;
+}
+
+.team-card .team-role, .team-card .team-email {
+  color: var(--color-muted);
+  font-size: .875rem;
+  opacity: 1;
+}
+
+.team-card .team-email {
+  margin-top: 8px;
+}
+
+@media(max-width: 767px) {
+  .Teams {
+    padding: calc(var(--header-height) + 28px) 16px 40px;
+  }
+  .Teams .mainteams {
+    height: 64px;
+  }
+}
