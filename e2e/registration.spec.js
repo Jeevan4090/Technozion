@@ -16,6 +16,9 @@ async function setup(page) {
       state.otpRequests += 1;
       return route.fulfill({ status: 500, json: { message: "OTP must not be used" } });
     }
+    if (url.pathname === "/api/uploads/sign") {
+      return route.fulfill({ json: { signature: "sig", apiKey: "key", cloudName: "cloud", params: { public_id: "tz/x/id-1", timestamp: 1, type: "authenticated", allowed_formats: "jpg,png,webp,pdf" } } });
+    }
     if (url.hostname === "api.cloudinary.com") {
       state.uploads += 1;
       return route.fulfill({ json: { secure_url: `https://example.com/test-upload-${state.uploads}` } });
