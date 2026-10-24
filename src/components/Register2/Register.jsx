@@ -201,7 +201,6 @@ export default function Register() {
       teamMembers: activeTeamMembers,
       events: data.events || [],
       registrationType: selectedTeamSize > 1 ? "team" : "individual",
-      password: data.password,
       registrationToken: googleUser?.registrationToken,
     };
 
@@ -242,7 +241,7 @@ export default function Register() {
       return;
     }
     const fieldsToValidate = step === 0
-      ? ["name", "gender", "email", "password", "college", ...(isNitw ? ["rollNumber"] : [])]
+      ? ["name", "gender", "email", "college", ...(isNitw ? ["rollNumber"] : [])]
       : step === 1
       ? activeMembers.flatMap((member, index) => {
           const memberType = watch(`members.${index}.studentType`) || member?.studentType || "external";
@@ -274,7 +273,7 @@ export default function Register() {
   };
 
   const onInvalid = invalid => {
-    const target = ["name", "gender", "email", "password", "college", "rollNumber"].some(field => invalid[field])
+    const target = ["name", "gender", "email", "college", "rollNumber"].some(field => invalid[field])
       ? 0
       : invalid.members && selectedTeamSize > 1
       ? 1
@@ -407,21 +406,6 @@ export default function Register() {
                     {errors.rollNumber && <p className="text-red-400 text-xs mt-1.5">{errors.rollNumber.message}</p>}
                   </div>
                 )}
-
-                <div>
-                  <label className={labelCls}>Password</label>
-                  <input
-                    type="password"
-                    placeholder="Minimum 8 characters"
-                    className={inputCls}
-                    aria-label="Password"
-                    {...register("password", { 
-                      required: "Password is required",
-                      minLength: { value: 8, message: "Must be at least 8 characters" }
-                    })}
-                  />
-                  {errors.password && <p className="text-red-400 text-xs mt-1.5">{errors.password.message}</p>}
-                </div>
 
                 <div>
                   <label className={labelCls}>College / University</label>
