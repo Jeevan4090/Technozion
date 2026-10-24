@@ -157,6 +157,7 @@ const AuthProvider = ({ children }) => {
         rollNumber: normalizeStudentType(member?.studentType) === 'nitw' ? normalizeRollNumber(member?.rollNumber) : undefined,
       })) : [],
       registrationType: registrationData.registrationType,
+      registrationToken: registrationData.registrationToken,
       idDocumentUrl,
       paymentScreenshotUrl,
     };
@@ -190,7 +191,7 @@ const AuthProvider = ({ children }) => {
         ? data.message
         : `Registration failed (${res.status}). Please try again.`;
       notify(message, { variant: 'error' });
-      return { ok: false, message };
+      return { ok: false, message, code: data.code };
     }
   } catch (err) {
     console.log(err);

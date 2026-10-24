@@ -59,3 +59,9 @@
   .registration-modal .grid.sm\:grid-cols-3 { grid-template-columns: 1fr; }
 }
 @media (prefers-reduced-motion: reduce) { .registration-step:not([hidden]) { animation: none; } }
+
+/* Step 1 stays visible but locked until Google sign-in completes */
+.registration-lead-fields:disabled .ui-input,
+.registration-lead-fields:disabled .registration-lead-accommodation { opacity: 0.5; cursor: not-allowed; }
+.registration-lead-fields:disabled label { cursor: not-allowed; }
+.registration-lead-fields .ui-input[readonly] { opacity: 0.75; cursor: not-allowed; }

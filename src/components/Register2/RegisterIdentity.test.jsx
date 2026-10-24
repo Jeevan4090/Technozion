@@ -55,3 +55,13 @@ test("each teammate can independently select NITW and supply a roll number", asy
   expect(container.querySelector('#member-0-roll')).toBeNull();
   expect(container.querySelectorAll('[aria-label^="Member "][aria-label$=" name"]')).toHaveLength(3);
 });
+
+test("team lead fields stay locked until Google sign-in, and Continue is blocked", async () => {
+  await mountRegister();
+  const lockedFields = container.querySelector("fieldset.registration-lead-fields");
+  expect(lockedFields.disabled).toBe(true);
+  expect(container.querySelector('[name="email"]').readOnly).toBe(true);
+  const continueButton = [...container.querySelectorAll("button")].find((b) => b.textContent.includes("Continue"));
+  await act(async () => Simulate.click(continueButton));
+  expect(container.textContent).toContain("Sign in with Google to continue.");
+});

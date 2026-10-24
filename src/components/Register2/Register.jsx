@@ -4,6 +4,8 @@ import useEvents from "../Events/useEvents";
 import EventsLoading from "../Events/EventsLoading";
 import "./registration-modal.css";
 import { useAuth } from "../../Context/AuthManager";
+import { API_URL } from "../../config";
+import GoogleSignInButton from "./GoogleSignInButton";
 import { isNitwEmail, isValidNitwRollNumber, normalizeRollNumber } from "../utils/registrationChecks";
 import {
   computeRegistrationFee,
@@ -120,6 +122,43 @@ export default function Register() {
   const body = useRef(null);
   const heading = useRef(null);
 
+  // ── Google sign-in (unlocks the rest of step 1) ────────────────────────────
+  const [googleUser, setGoogleUser] = useState(null); // { email, name, registrationToken }
+  const [googleError, setGoogleError] = useState("");
+  const [googleBusy, setGoogleBusy] = useState(false);
+
+  const handleGoogleCredential = async (credential) => {
+    setGoogleBusy(true);
+    setGoogleError("");
+    try {
+      const res = await fetch(`${API_URL}/api/auth/google`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ credential }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setGoogleError(data.message || "Google sign-in failed. Please try again.");
+        return;
+      }
+      setGoogleUser({ email: data.email, name: data.name, registrationToken: data.registrationToken });
+      setValue("email", data.email, { shouldValidate: true, shouldDirty: true });
+      if (data.name) setValue("name", data.name, { shouldValidate: true, shouldDirty: true });
+      setStepError("");
+    } catch {
+      setGoogleError("Could not reach the server. Check your connection and try again.");
+    } finally {
+      setGoogleBusy(false);
+    }
+  };
+
+  const resetGoogleUser = () => {
+    setGoogleUser(null);
+    setGoogleError("");
+    setValue("email", "");
+    setValue("name", "");
+  };
+
   const steps = useMemo(() => [
     { id: 0, label: "Team lead" },
     ...(selectedTeamSize > 1 ? [{ id: 1, label: "Your team" }] : []),
@@ -163,10 +202,17 @@ export default function Register() {
       events: data.events || [],
       registrationType: selectedTeamSize > 1 ? "team" : "individual",
       password: data.password,
+      registrationToken: googleUser?.registrationToken,
     };
 
     const result = await authRegister(payload);
-    if (result?.ok === false) setStepError(result.message);
+    if (result?.ok === false) {
+      setStepError(result.message);
+      if (result.code === "GOOGLE_AUTH_REQUIRED") {
+        setGoogleUser(null);
+        setStep(0);
+      }
+    }
   };
 
   const busy = isSubmitting || authLoading;
@@ -191,6 +237,10 @@ export default function Register() {
 
   const nextStep = async () => {
     if (busy) return;
+    if (step === 0 && !googleUser) {
+      setStepError("Sign in with Google to continue.");
+      return;
+    }
     const fieldsToValidate = step === 0
       ? ["name", "gender", "email", "password", "college", ...(isNitw ? ["rollNumber"] : [])]
       : step === 1
@@ -274,7 +324,8 @@ export default function Register() {
 
           <div className="registration-modal-body" ref={body}>
             {/* Step 0: Team Lead Details */}
-            <section hidden={step !== 0} className="registration-step space-y-6">
+            <section hidden={step !== 0} className="registration-step">
+              <fieldset disabled={!googleUser} className="registration-lead-fields m-0 min-w-0 border-0 p-0 space-y-6">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
                   <label className={labelCls}>Full Name</label>
@@ -282,6 +333,7 @@ export default function Register() {
                     placeholder="Your full name"
                     className={inputCls}
                     aria-label="Full name"
+                    readOnly={!!googleUser?.name}
                     {...register("name", { required: "Lead name is required" })}
                   />
                   {errors.name && <p className="text-red-400 text-xs mt-1.5">{errors.name.message}</p>}
@@ -318,17 +370,30 @@ export default function Register() {
 
                 <div className="relative">
                   <label className={labelCls}>Email Address</label>
+                  {/* Before sign-in: Google button. After: the verified email, locked. */}
+                  {!googleUser && (
+                    <div className={googleBusy ? "pointer-events-none opacity-60" : ""} aria-busy={googleBusy}>
+                      <GoogleSignInButton onCredential={handleGoogleCredential} />
+                    </div>
+                  )}
+                  {googleError && <p className="text-red-400 text-xs mt-1.5">{googleError}</p>}
                   <input
                     type="email"
                     placeholder="you@example.com"
-                    className={inputCls}
+                    className={`${inputCls} ${googleUser ? "" : "hidden"}`}
                     aria-label="Email address"
+                    readOnly
                     {...register("email", {
                       required: "Email is required",
                       pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: "Enter a valid email address" },
                       setValueAs: value => value.trim(),
                     })}
                   />
+                  {googleUser && (
+                    <button type="button" className="registration-text-button mt-2 text-xs" onClick={resetGoogleUser}>
+                      Use a different Google account
+                    </button>
+                  )}
                   <p className="text-xs text-ui-muted mt-2">
                     {isNitw ? "NITW student · teams made up only of NITW students pay nothing." : "NITW students: use your institute email."}
                   </p>
@@ -371,7 +436,7 @@ export default function Register() {
               </div>
 
               {/* Team Lead Accommodation */}
-              <div className="rounded-xl border border-ui-border bg-ui-input p-4 sm:p-5">
+              <div className="registration-lead-accommodation rounded-xl border border-ui-border bg-ui-input p-4 sm:p-5">
                 <label className="flex items-center justify-between gap-4 cursor-pointer text-sm font-medium text-white">
                   <span>Accommodation for Team Lead?</span>
                   <input
@@ -384,6 +449,7 @@ export default function Register() {
                   Accommodation charges are standard and will be shared on campus upon arrival.
                 </p>
               </div>
+              </fieldset>
             </section>
 
             {/* Step 1: Team Members */}
