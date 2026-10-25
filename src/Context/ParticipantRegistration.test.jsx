@@ -136,3 +136,14 @@ test("uploads go to Cloudinary only with the backend-signed parameters, never an
   expect(cloudInit.body.get("public_id")).toBe("tz/x/id-1");
   expect(cloudInit.body.get("upload_preset")).toBeNull();
 });
+
+test("registration forwards normalized transactionId when payment is required", async () => {
+  global.fetch
+    .mockResolvedValueOnce(signOk)
+    .mockResolvedValueOnce({ ok: true, json: async () => ({ secure_url: "https://example.com/id.png" }) })
+    .mockResolvedValueOnce({ ok: true, json: async () => ({ participants: [] }) });
+  await mountSubmit({ ...nitwRegistration(), transactionId: " sbin126123456789 " });
+  const payload = JSON.parse(global.fetch.mock.calls[2][1].body);
+  expect(payload.transactionId).toBe("SBIN126123456789");
+});
+});

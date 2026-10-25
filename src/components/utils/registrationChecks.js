@@ -6,6 +6,12 @@ export const normalizeRollNumber = (value) =>
 export const isValidNitwRollNumber = (value) =>
   /^[A-Z0-9-]{3,32}$/.test(normalizeRollNumber(value));
 
+export const normalizeTransactionId = (value) =>
+  typeof value === "string" ? value.trim().toUpperCase() : "";
+
+export const isValidTransactionId = (value) =>
+  /^[A-Z0-9/_-]{6,64}$/.test(normalizeTransactionId(value));
+
 export const isNitwEmail = (email) => {
   if (typeof email !== "string") return false;
   const parts = email.trim().toLowerCase().split("@");

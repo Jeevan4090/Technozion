@@ -83,7 +83,9 @@ test("outsiders complete a single modal, retain files and teammates, and submit 
   await expect(page.getByText("62046706567", { exact: true })).toBeVisible();
   await expect(page.locator(".registration-step:not([hidden])").getByText("₹600", { exact: true })).toBeVisible();
   await next(page);
+  await expect(page.getByText("Transaction ID / UTR is required", { exact: true })).toBeVisible();
   await expect(page.getByText("Payment screenshot is required", { exact: true })).toBeVisible();
+  await page.locator("#transaction-id").fill("SBIN126123456789");
   await page.locator("#payment-screenshot").setInputFiles(payment);
   await next(page);
   await expect(heading(page)).toHaveText("Review & submit.");

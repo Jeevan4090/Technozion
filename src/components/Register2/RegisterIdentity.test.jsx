@@ -65,3 +65,9 @@ test("team lead fields stay locked until Google sign-in, and Continue is blocked
   await act(async () => Simulate.click(continueButton));
   expect(container.textContent).toContain("Sign in with Google to continue.");
 });
+
+test("payment step includes the transaction ID input field for external participants", async () => {
+  await mountRegister();
+  expect(container.querySelector('#transaction-id')).not.toBeNull();
+});
+});

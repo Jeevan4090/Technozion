@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Loader } from '../components/Loader'
 import { useSnackbar } from './SnackbarProvider'
 import {API_URL} from '../config'
-import { isNitwEmail, isValidNitwRollNumber, normalizeRollNumber } from '../components/utils/registrationChecks'
+import { isNitwEmail, isValidNitwRollNumber, normalizeRollNumber, normalizeTransactionId } from '../components/utils/registrationChecks'
 import { countExternalParticipants, normalizeStudentType } from '../components/Register2/feeUtils'
 
 const UPLOAD_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf']
@@ -183,6 +183,9 @@ const AuthProvider = ({ children }) => {
       registrationToken: registrationData.registrationToken,
       idDocumentUrl,
       paymentScreenshotUrl,
+      transactionId: requiresPayment && normalizeTransactionId(registrationData.transactionId)
+        ? normalizeTransactionId(registrationData.transactionId)
+        : undefined,
     };
     // Send JSON with URLs to backend
     requestStage = "registration";

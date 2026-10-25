@@ -6,7 +6,7 @@ import "./registration-modal.css";
 import { useAuth } from "../../Context/AuthManager";
 import { API_URL } from "../../config";
 import GoogleSignInButton from "./GoogleSignInButton";
-import { isNitwEmail, isValidNitwRollNumber, normalizeRollNumber } from "../utils/registrationChecks";
+import { isNitwEmail, isValidNitwRollNumber, isValidTransactionId, normalizeRollNumber, normalizeTransactionId } from "../utils/registrationChecks";
 import {
   computeRegistrationFee,
   groupRegistrationEvents,
@@ -76,6 +76,7 @@ export default function Register() {
 
   const collegeIdFile = watch("collegeId");
   const paymentFile = watch("paymentScreenshot");
+  const watchedTransactionId = watch("transactionId") || "";
   const leadAccommodation = watch("needAccommodation") || false;
   const watchedEmail = watch("email") || "";
   const watchedMembersRaw = watch("members");
@@ -195,6 +196,7 @@ export default function Register() {
       collegeName: data.college,
       idDocument: data.collegeId[0],
       paymentScreenshot: data.paymentScreenshot?.[0] || null,
+      transactionId: requiresPayment ? normalizeTransactionId(data.transactionId) : undefined,
       accommodation: !!data.needAccommodation,
       needAccommodation: !!data.needAccommodation,
       teamSize: selectedTeamSize,
@@ -207,6 +209,9 @@ export default function Register() {
     const result = await authRegister(payload);
     if (result?.ok === false) {
       setStepError(result.message);
+      if (result.code === "DUPLICATE_TRANSACTION_ID") {
+        setStep(4);
+      }
       if (result.code === "GOOGLE_AUTH_REQUIRED") {
         setGoogleUser(null);
         setStep(0);
@@ -251,7 +256,7 @@ export default function Register() {
       ? ["events"]
       : step === 3
       ? ["collegeId"]
-      : ["paymentScreenshot"];
+      : ["transactionId", "paymentScreenshot"];
 
     if (!await trigger(fieldsToValidate, { shouldFocus: true })) {
       setStepError("Check the required details before continuing.");
@@ -281,7 +286,7 @@ export default function Register() {
       ? 2
       : invalid.collegeId
       ? 3
-      : invalid.paymentScreenshot && requiresPayment
+      : (invalid.transactionId || invalid.paymentScreenshot) && requiresPayment
       ? 4
       : 5;
     setStep(target);
@@ -651,6 +656,30 @@ export default function Register() {
               </div>
 
               <div className="border-t border-ui-border pt-6 space-y-3">
+                <div className="space-y-2 pb-3">
+                  <label htmlFor="transaction-id" className="block text-sm font-bold text-ui-accent">1. Enter Transaction ID / UTR / RRN</label>
+                  <p id="transaction-id-help" className="text-xs text-ui-muted">Enter the unique UPI Transaction ID / RRN or NEFT/IMPS UTR reference number from your payment receipt.</p>
+                  <input
+                    id="transaction-id"
+                    type="text"
+                    autoComplete="off"
+                    placeholder="e.g. 412345678901 or SBIN126123456789"
+                    aria-describedby="transaction-id-help transaction-id-error"
+                    aria-invalid={Boolean(errors.transactionId)}
+                    className={inputCls}
+                    {...register("transactionId", {
+                      required: total > 0 ? "Transaction ID / UTR is required" : false,
+                      setValueAs: normalizeTransactionId,
+                      validate: (value) =>
+                        total <= 0 ||
+                        isValidTransactionId(value) ||
+                        "Enter a valid Transaction ID / UTR (6–64 letters or digits)",
+                    })}
+                  />
+                  {errors.transactionId && (
+                    <p id="transaction-id-error" role="alert" className="text-red-400 text-xs mt-1.5">{errors.transactionId.message}</p>
+                  )}
+                </div>
                 <label htmlFor="payment-screenshot" className="block text-sm font-bold text-ui-accent">2. Upload payment screenshot</label>
                 <p id="payment-screenshot-help" className="text-xs text-ui-muted">After the transfer succeeds, upload a clear screenshot showing the amount and transaction reference.</p>
                 <label htmlFor="payment-screenshot" className={`relative border border-dashed rounded-xl p-6 flex flex-col items-center justify-center cursor-pointer bg-ui-input transition-colors focus-within:ring-2 focus-within:ring-ui-accent ${paymentFile?.[0] ? "border-ui-accent" : "border-ui-border hover:border-ui-accent"}`}>
@@ -738,6 +767,7 @@ export default function Register() {
                   <p className="registration-exempt">NITW registration · payment exempt</p>
                 ) : (
                   <>
+                    <p>Transaction ID: {normalizeTransactionId(watchedTransactionId)}</p>
                     <p>Payment screenshot: {paymentFile?.[0]?.name}</p>
                     <p className="registration-review-total">Total <strong>₹{total}</strong></p>
                     <button type="button" className="registration-text-button" onClick={() => goTo(4)}>Edit payment</button>
