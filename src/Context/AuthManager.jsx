@@ -6,6 +6,9 @@ import {API_URL} from '../config'
 import { isNitwEmail, isValidNitwRollNumber, normalizeRollNumber } from '../components/utils/registrationChecks'
 import { countExternalParticipants, normalizeStudentType } from '../components/Register2/feeUtils'
 
+const UPLOAD_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf']
+const MAX_UPLOAD_BYTES = 5 * 1024 * 1024
+
 const AuthContext = createContext()
 export const useAuth = () => useContext(AuthContext)
 
@@ -88,15 +91,35 @@ const AuthProvider = ({ children }) => {
       return { ok: false, message: 'Please enter your NITW roll number.' };
     }
     // Helper: upload a file to Cloudinary and return the URL
-    const uploadToCloudinary = async (file, label) => {
+    const uploadToCloudinary = async (file, label, kind) => {
       requestStage = label;
-      const cloudName = "dpjrslhwg"; // replace with your Cloudinary cloud name
-      const uploadPreset = "technozian_upload"; // replace with your preset
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("upload_preset", uploadPreset);
+      const uploadError = (message) => Object.assign(new Error(message), { isUpload: true });
+      if (!file || !UPLOAD_TYPES.includes(file.type)) {
+        throw uploadError(`${label} must be a JPG, PNG, WebP or PDF file.`);
+      }
+      if (file.size > MAX_UPLOAD_BYTES) {
+        throw uploadError(`${label} must be smaller than 5 MB.`);
+      }
 
-      const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/upload`, {
+      // The backend signs each upload (only after Google sign-in), choosing the private path itself.
+      const signRes = await fetch(`${url}/api/uploads/sign`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ kind, registrationToken: registrationData.registrationToken }),
+      });
+      let signed = {};
+      try { signed = await signRes.json(); } catch {}
+      if (!signRes.ok || !signed.signature) {
+        throw uploadError(signed.message || `${label} upload could not be started (${signRes.status}). Please try again.`);
+      }
+
+      const formData = new FormData();
+      Object.entries(signed.params).forEach(([key, value]) => formData.append(key, value));
+      formData.append("api_key", signed.apiKey);
+      formData.append("signature", signed.signature);
+      formData.append("file", file);
+
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${signed.cloudName}/image/upload`, {
         method: "POST",
         body: formData,
       });
@@ -117,7 +140,7 @@ const AuthProvider = ({ children }) => {
       const idFile = Array.isArray(registrationData.idDocument)
         ? registrationData.idDocument[0]
         : registrationData.idDocument;
-      idDocumentUrl = await uploadToCloudinary(idFile, "ID document");
+      idDocumentUrl = await uploadToCloudinary(idFile, "ID document", "id");
     } else {
       notify('Please upload your College ID/Aadhar.', { variant: 'error' })
       setLoading(false);
@@ -136,7 +159,7 @@ const AuthProvider = ({ children }) => {
       const paymentFile = Array.isArray(registrationData.paymentScreenshot)
         ? registrationData.paymentScreenshot[0]
         : registrationData.paymentScreenshot;
-      paymentScreenshotUrl = await uploadToCloudinary(paymentFile, "Payment screenshot");
+      paymentScreenshotUrl = await uploadToCloudinary(paymentFile, "Payment screenshot", "payment");
     }
     
 
