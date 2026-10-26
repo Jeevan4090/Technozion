@@ -166,6 +166,7 @@ const AuthProvider = ({ children }) => {
     // Prepare payload for backend
     const payload = {
       name: registrationData.name || "",
+      gender: registrationData.gender || "",
       email: registrationData.email || "",
       rollNumber: emailIsNitw ? normalizeRollNumber(registrationData.rollNumber) : undefined,
       password: registrationData.password || "",
