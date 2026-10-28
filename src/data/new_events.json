@@ -656,5 +656,33 @@
     "description": "The flagship product launch competition of Technozion 2026 where participants step into the shoes of startup founders. Teams conceptualize a product, establish its brand identity, and deliver a comprehensive go-to-market pitch covering target audience segmentation, pricing strategy, and launch execution.",
     "rules": "1. Teams must conceptualize an original product offering and formulate a complete launch strategy.\n2. Submissions and pitches must clearly articulate the problem statement, target demographic, pricing model, and rollout strategy.\n3. Final presentations are pitched live before the judging panel and scored on innovation, market feasibility, brand positioning, and pitch clarity.",
     "poc": ""
-  }
+  },
+  {
+  "id": "model-mania",
+  "name": "Model Mania",
+  "club": "Technical & Engineering Committee",
+  "category": "COMPETITIONS",
+  "type": "Competition",
+  "teamSize": "1-4",
+  "duration": "TBD",
+  "imgsrc": "/posters26/model-mania.jpg",
+  "poster": "/posters26/model-mania.jpg",
+  "description": "The premier science and engineering model exhibition and competition of Technozion 2026, NIT Warangal. Model Mania serves as a platform for innovators to showcase working models, hardware prototypes, and creative engineering solutions, demonstrating real-world problem-solving and practical scientific applications.",
+  "rules": "1. Participants may compete individually or in teams of up to 4 members.\n2. Projects must feature an original working model, design prototype, or functional scientific demonstration.\n3. Exhibits will be presented live before a panel of judges, evaluated on technical ingenuity, practical feasibility, design execution, and clarity of presentation.",
+  "poc": ""
+},
+{
+  "id": "road-safety-stall",
+  "name": "Road Safety Awareness Stall",
+  "club": "Road Safety Forum",
+  "category": "EXHIBITIONS",
+  "type": "Exhibition",
+  "teamSize": "Open to all",
+  "duration": "All Day",
+  "imgsrc": "/posters26/RSF_1.png",
+  "poster": "/posters26/RSF_1.png",
+  "description": "An interactive road safety awareness stall hosted by the Road Safety Forum, NIT Warangal at Technozion 2026. Features live heavy-vehicle blind-spot demonstrations, educational videos on critical road-user habits, traffic signs and markings, and displays of cutting-edge road safety research conducted at NITW, alongside short films and an engaging QR-based safety quiz.",
+  "rules": "1. Open to all fest attendees, students, and visitors throughout the festival hours.\n2. Interactive live demonstrations (blind spots, safety equipment) operate at regular intervals throughout the day.\n3. Attendees can participate in the digital QR-based quiz on the spot to test their knowledge and win merchandise.",
+  "poc": ""
+}
 ]
