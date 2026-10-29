@@ -127,6 +127,23 @@ export default function Register() {
   const [googleUser, setGoogleUser] = useState(null); // { email, name, registrationToken }
   const [googleError, setGoogleError] = useState("");
   const [googleBusy, setGoogleBusy] = useState(false);
+  const [signInHint, setSignInHint] = useState(""); // which field was tapped before sign-in
+
+  // Transparent tap-catcher placed inside a `relative` field wrapper
+  const signInGuard = (key) =>
+    !googleUser && (
+      <div
+        className="absolute inset-0 z-[1] cursor-not-allowed"
+        onClick={() => setSignInHint(key)}
+        aria-hidden="true"
+      />
+    );
+
+  // Red text shown under the tapped field only
+  const signInMsg = (key) =>
+    !googleUser && signInHint === key && (
+      <p role="alert" className="text-red-400 text-xs mt-1.5">Sign in with Google first.</p>
+    );
 
   const handleGoogleCredential = async (credential) => {
     setGoogleBusy(true);
@@ -146,6 +163,7 @@ export default function Register() {
       setValue("email", data.email, { shouldValidate: true, shouldDirty: true });
       if (data.name) setValue("name", data.name, { shouldValidate: true, shouldDirty: true });
       setStepError("");
+      setSignInHint("");
     } catch {
       setGoogleError("Could not reach the server. Check your connection and try again.");
     } finally {
@@ -156,6 +174,7 @@ export default function Register() {
   const resetGoogleUser = () => {
     setGoogleUser(null);
     setGoogleError("");
+    setSignInHint("");
     setValue("email", "");
     setValue("name", "");
   };
@@ -242,7 +261,7 @@ export default function Register() {
   const nextStep = async () => {
     if (busy) return;
     if (step === 0 && !googleUser) {
-      setStepError("Sign in with Google to continue.");
+      setSignInHint("continue");
       return;
     }
     const fieldsToValidate = step === 0
@@ -331,7 +350,7 @@ export default function Register() {
             <section hidden={step !== 0} className="registration-step">
               <fieldset disabled={!googleUser} className="registration-lead-fields m-0 min-w-0 border-0 p-0 space-y-6">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                <div>
+                <div className="relative">
                   <label className={labelCls}>Full Name</label>
                   <input
                     placeholder="Your full name"
@@ -341,9 +360,11 @@ export default function Register() {
                     {...register("name", { required: "Lead name is required" })}
                   />
                   {errors.name && <p className="text-red-400 text-xs mt-1.5">{errors.name.message}</p>}
+                  {signInGuard("name")}
+                  {signInMsg("name")}
                 </div>
 
-                <div>
+                <div className="relative">
                   <label className={labelCls}>Team Size (1–4)</label>
                   <select
                     className={`${inputCls} cursor-pointer`}
@@ -355,9 +376,11 @@ export default function Register() {
                     <option value={3} className="bg-ui-input text-white">3 Members</option>
                     <option value={4} className="bg-ui-input text-white">4 Members</option>
                   </select>
+                  {signInGuard("teamSize")}
+                  {signInMsg("teamSize")}
                 </div>
 
-                <div>
+                <div className="relative">
                   <label className={labelCls}>Gender</label>
                   <select
                     className={`${inputCls} cursor-pointer`}
@@ -370,16 +393,19 @@ export default function Register() {
                     <option value="other" className="bg-ui-input text-white">Other / Prefer not to say</option>
                   </select>
                   {errors.gender && <p className="text-red-400 text-xs mt-1.5">{errors.gender.message}</p>}
+                  {signInGuard("gender")}
+                  {signInMsg("gender")}
                 </div>
 
                 <div className="relative">
                   <label className={labelCls}>Email Address</label>
                   {/* Before sign-in: Google button. After: the verified email, locked. */}
                   {!googleUser && (
-                    <div className={googleBusy ? "pointer-events-none opacity-60" : ""} aria-busy={googleBusy}>
+                    <div className={`relative z-10 ${googleBusy ? "pointer-events-none opacity-60" : ""}`} aria-busy={googleBusy}>
                       <GoogleSignInButton onCredential={handleGoogleCredential} />
                     </div>
                   )}
+                  {signInMsg("email")}
                   {googleError && <p className="text-red-400 text-xs mt-1.5">{googleError}</p>}
                   <input
                     type="email"
@@ -402,6 +428,7 @@ export default function Register() {
                     {isNitw ? "NITW student · teams made up only of NITW students pay nothing." : "NITW students: use your institute email."}
                   </p>
                   {errors.email && <p className="text-red-400 text-xs mt-1.5">{errors.email.message}</p>}
+                  {signInGuard("email")}
                 </div>
 
                 {isNitw && (
@@ -412,7 +439,7 @@ export default function Register() {
                   </div>
                 )}
 
-                <div>
+                <div className="relative">
                   <label className={labelCls}>College / University</label>
                   <input
                     placeholder="e.g. NIT Warangal"
@@ -421,22 +448,28 @@ export default function Register() {
                     {...register("college", { required: "College name is required" })}
                   />
                   {errors.college && <p className="text-red-400 text-xs mt-1.5">{errors.college.message}</p>}
+                  {signInGuard("college")}
+                  {signInMsg("college")}
                 </div>
               </div>
 
               {/* Team Lead Accommodation */}
-              <div className="registration-lead-accommodation rounded-xl border border-ui-border bg-ui-input p-4 sm:p-5">
-                <label className="flex items-center justify-between gap-4 cursor-pointer text-sm font-medium text-white">
-                  <span>Accommodation for Team Lead?</span>
-                  <input
-                    type="checkbox"
-                    className="h-4 w-4 accent-cyan-400"
-                    {...register("needAccommodation")}
-                  />
-                </label>
-                <p className="mt-2 text-xs text-ui-muted">
-                  Accommodation charges are standard and will be shared on campus upon arrival.
-                </p>
+              <div className="relative">
+                <div className="registration-lead-accommodation rounded-xl border border-ui-border bg-ui-input p-4 sm:p-5">
+                  <label className="flex items-center justify-between gap-4 cursor-pointer text-sm font-medium text-white">
+                    <span>Accommodation for Team Lead?</span>
+                    <input
+                      type="checkbox"
+                      className="h-4 w-4 accent-cyan-400"
+                      {...register("needAccommodation")}
+                    />
+                  </label>
+                  <p className="mt-2 text-xs text-ui-muted">
+                    Accommodation charges are standard and will be shared on campus upon arrival.
+                  </p>
+                </div>
+                {signInGuard("accommodation")}
+                {signInMsg("accommodation")}
               </div>
               </fieldset>
             </section>
@@ -778,6 +811,9 @@ export default function Register() {
           </div>
 
           <footer className="registration-modal-footer">
+            {step === 0 && !googleUser && signInHint === "continue" && (
+              <p className="text-red-400 text-xs" role="alert">Sign in with Google first.</p>
+            )}
             {stepError && <p className="registration-error" role="alert">{stepError}</p>}
             <div className="registration-footer-actions">
               <button
@@ -806,7 +842,8 @@ export default function Register() {
                 <button
                   key="continue"
                   type="button"
-                  className="ui-button ui-button-primary"
+                  className={`ui-button ui-button-primary ${step === 0 && !googleUser ? "opacity-60" : ""}`}
+                  aria-disabled={step === 0 && !googleUser}
                   disabled={busy || (step === 2 && eventsLoading)}
                   onClick={event => { event.preventDefault(); nextStep(); }}
                 >
